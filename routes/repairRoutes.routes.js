@@ -1,9 +1,10 @@
 const express = require('express');
 
 const repairController = require('../controllers/repair.controller');
-const validExistRepair = require('../middlewares/repair.middleware');
+const RepairMiddleware = require('../middlewares/repair.middleware');
 const validFieldRepair = require('../middlewares/validationRepair.middleware');
 const authMiddleware = require("../middlewares/auth.middleware");
+
 
 const routerRepair = express.Router();
 
@@ -21,15 +22,15 @@ routerRepair
 routerRepair
   .route('/:id')
   .get(
-    validExistRepair.validExistRepair,
-    repairController.repairById
+    RepairMiddleware.ValidRepair,
+    repairController.repairById,
   )
   .patch(
-    validExistRepair.validExistRepair,
+    RepairMiddleware.validExistRepair,
     repairController.repairUpDate
   )
   .delete(
-    validExistRepair.validExistRepair,
+    RepairMiddleware.validExistRepair,
     repairController.deleteRepair
   );
 

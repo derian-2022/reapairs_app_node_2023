@@ -8,49 +8,60 @@ exports.allRepair = catchAsync(
       where: {
         status: 'pending',
       },
+
+      include: [
+        {
+          model: User,
+          attributes: {
+            exclude: [
+              'password',
+              'role',
+              'status',
+            ],
+          },
+        },
+      ],
     });
 
     res.status(200).json({
       message: 'The query has been done successs',
       results: repairs.length,
       repairs,
+      User,
     });
   }
 );
 
 exports.repairById = catchAsync(
   async (req, res) => {
-    const { id } = req.params;
+    const { repair } = req;
 
-    const repair = await Repair.findOne({
+    const repairInfo = await Repair.findOne({ 
       where: {
-        userId: id,
-        status: 'pending',
+        id: repair.id,
       },
-    });
-
-    const user = await User.findOne({
-      where: {
-        id,
-        status: 'available',
-      },
-    });
-
-    if (!repair) {
-      return res.status(404).json({
-        status: 'error',
-        message: 'The repair not found',
-      });
-    }
+      include: [
+        {
+          model: User,
+          attributes: {
+            exclude: [
+              'password',
+              'role',
+              'status',
+            ],
+          },
+        },
+      ],
+  });
 
     res.status(200).json({
       status: 'success',
       message: 'The query has been done success',
-      repair,
-      user,
+      repairInfo,
     });
   }
 );
+
 
 exports.repairUpDate = catchAsync(
   async (req, res) => {
@@ -68,16 +79,12 @@ exports.repairUpDate = catchAsync(
 
 exports.createRepair = catchAsync(
   async (req, res) => {
-    const {
-      date,
-      userId,
-      description,
-      motorsNumber,
-    } = req.body;
+    const { date, description, motorsNumber, userId } =
+      req.body;
 
     const repair = await Repair.create({
-      date,
       userId,
+      date,
       description,
       motorsNumber,
     });

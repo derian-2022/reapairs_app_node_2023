@@ -4,7 +4,7 @@ const bcrypt = require("bcryptjs")
 const generateJWT = require('../utils/jwt');
 const AppError = require('../utils/appError');
 
-exports.loginUser = catchAsync(async(req, res) => {
+exports.loginUser = catchAsync(async(req, res, next) => {
   const { email, password } = req.body 
 
    const user = await User.findOne({
@@ -41,6 +41,9 @@ exports.findAll = catchAsync(async (req, res) => {
     where: {
       status: 'available',
     },
+    attributes: {
+      exclude: ["password"],
+    }
   });
 
   res.status(200).json({
@@ -57,7 +60,12 @@ exports.userById = catchAsync(
     res.status(200).json({
       status: 'success',
       message: 'The query has been done success 😍',
-      user,
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role
+      },
     });
   }
 );
