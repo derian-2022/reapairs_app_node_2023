@@ -32,6 +32,7 @@ exports.allRepair = catchAsync(
   }
 );
 
+
 exports.repairById = catchAsync(
   async (req, res) => {
     const { repair } = req;
@@ -77,6 +78,7 @@ exports.repairUpDate = catchAsync(
   }
 );
 
+
 exports.createRepair = catchAsync(
   async (req, res) => {
     const { date, description, motorsNumber, userId } =
@@ -96,6 +98,7 @@ exports.createRepair = catchAsync(
     });
   }
 );
+
 
 exports.deleteRepair = catchAsync(
   async (req, res) => {
